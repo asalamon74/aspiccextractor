@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
             cleanCameraName(cameraName);
             char *searchpos2 = searchpos+1;
             while (searchpos2 < buffer+length) {
-                if (strncmp(searchpos2, "END_DATA\x0A", 9)==0) {
+                if (strncmp(searchpos2, "END_DATA\x0A", 9)==0 || strncmp(searchpos2, "END_DATA\x0D", 9)==0) {
                     break;
                 }
                 ++searchpos2;
