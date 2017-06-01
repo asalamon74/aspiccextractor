@@ -21,6 +21,14 @@ char *findNext(char *haystack, int haystackLength, char*needle) {
     return NULL;
 }
 
+// sometime can camera name is repeated
+void cleanCameraName(char *name) {
+    int len = strlen(name);
+    if (strncmp(name, name+(len/2), len/2)==0) {
+        name[len/2] = '\0';
+    }
+}
+
 int main(int argc, char **argv) {
     FILE *asp = fopen("AfterShot", "rb");
     fseek(asp, 0, SEEK_END);
@@ -37,6 +45,7 @@ int main(int argc, char **argv) {
             char *cameraNamePos = findNext(searchpos+1, 1024, "desc");
             if (cameraNamePos != NULL ) {
                 char *cameraName = descReader(cameraNamePos);
+                cleanCameraName(cameraName);
                 printf("found %s\n", cameraName);
             } else {
                 printf("cannot find\n");
