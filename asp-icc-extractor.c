@@ -35,8 +35,24 @@ void writeFile(char *fileName, char *buffer, int length) {
     fclose(fout);
 }
 
+void usage(char *name) {
+    printf("\nUsage: %s filename\n\n\
+Extract ICC camera color profiles from Corel AfterShot Pro binary.\n\
+\n\
+  filename: binary file of Corel AfterShot Pro\n\
+\n", name);
+}
+
 int main(int argc, char **argv) {
-    FILE *asp = fopen("AfterShot", "rb");
+    if (argc != 2 ) {
+        usage(argv[0]);
+        return 0;
+    }
+    FILE *asp = fopen(argv[1], "rb");
+    if (asp==NULL) {
+        fprintf(stderr, "Cannot open file %s\n",argv[1]);
+        exit(-1);
+    }
     fseek(asp, 0, SEEK_END);
     int length = ftell(asp);
     rewind(asp);
