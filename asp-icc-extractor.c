@@ -13,6 +13,14 @@ int main(int argc, char **argv) {
     while (searchpos < buffer+length) {
         if (strncmp(searchpos, "scnrRGB XYZ", 11)==0) {
             printf("found\n");
+            char *searchpos2 = searchpos+1;
+            while (searchpos2 < buffer+length) {
+                if (strncmp(searchpos2, "END_DATA\x0A", 9)==0) {
+                    printf("found2\n");
+                    break;
+                }
+                ++searchpos2;
+            }
         }
         ++searchpos;
     }
