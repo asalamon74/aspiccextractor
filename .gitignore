@@ -1,3 +1,4 @@
 *.orig
 *~
 asp-icc-extractor
+*.icc
