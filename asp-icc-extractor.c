@@ -21,12 +21,18 @@ char *findNext(char *haystack, int haystackLength, char*needle) {
     return NULL;
 }
 
-// sometime can camera name is repeated
+// sometimes camera name is repeated
 void cleanCameraName(char *name) {
     int len = strlen(name);
     if (strncmp(name, name+(len/2), len/2)==0) {
         name[len/2] = '\0';
     }
+}
+
+void writeFile(char *fileName, char *buffer, int length) {
+    FILE *fout = fopen(fileName, "wb");
+    fwrite(buffer, length, 1,fout);
+    fclose(fout);
 }
 
 int main(int argc, char **argv) {
@@ -37,19 +43,17 @@ int main(int argc, char **argv) {
     char *buffer = (char *)malloc((length+1)*sizeof(char));
     fread(buffer, length, 1, asp);
     char *searchpos = buffer;
+    char *beginpos;
     while (searchpos < buffer+length) {
         if (strncmp(searchpos, "scnrRGB XYZ", 11)==0) {
+            beginpos = searchpos-12;
             searchpos = findNext(searchpos+1, 1024, "desc");
             searchpos = findNext(searchpos+1, 1024, "desc");
+            char *iccName = descReader(searchpos);
             searchpos = findNext(searchpos+1, 1024, "desc");
             char *cameraNamePos = findNext(searchpos+1, 1024, "desc");
-            if (cameraNamePos != NULL ) {
-                char *cameraName = descReader(cameraNamePos);
-                cleanCameraName(cameraName);
-                printf("found %s\n", cameraName);
-            } else {
-                printf("cannot find\n");
-            }
+            char *cameraName = descReader(cameraNamePos);
+            cleanCameraName(cameraName);
             char *searchpos2 = searchpos+1;
             while (searchpos2 < buffer+length) {
                 if (strncmp(searchpos2, "END_DATA\x0A", 9)==0) {
@@ -57,6 +61,10 @@ int main(int argc, char **argv) {
                 }
                 ++searchpos2;
             }
+            char *fname = malloc(strlen(iccName)+5);
+            sprintf(fname, "%s.icc", iccName);
+            printf("saving %s for camera %s\n", fname, cameraName);
+            writeFile(fname, beginpos, (searchpos2-beginpos)+9);
         }
         ++searchpos;
     }
