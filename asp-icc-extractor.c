@@ -55,6 +55,9 @@ int main(int argc, char **argv) {
     }
     fseek(asp, 0, SEEK_END);
     int length = ftell(asp);
+    if (length < 4096) {
+      fprintf(stderr, "Size of the binary is too small (%d bytes)\n", length);
+    }
     rewind(asp);
     char *buffer = (char *)malloc((length+1)*sizeof(char));
     fread(buffer, length, 1, asp);
