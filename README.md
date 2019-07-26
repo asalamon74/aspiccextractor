@@ -9,8 +9,14 @@ Extracts ICC camera color profiles from Corel AfterShot Pro binary.
 
 Extracting from Linux binary:
 
-`asp-icc-extractor AfterShot`
+`asp-icc-extractor AfterShot [directory]`
 
 Extracting from Windows binary:
 
-`asp-icc-extractor AfterShot.exe`
+`asp-icc-extractor AfterShot.exe [directory]`
+
+* Optinal directory name can be specified. If no directory is
+  specified the program saves the ICC profiles into the working
+  directory.
+
+* Tested using AFterShot Pro version 1, 2, and 3.

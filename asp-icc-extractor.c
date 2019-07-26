@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <sys/stat.h>
+
 char *descReader(char *ptr) {
     long length = ptr[8] << 24 | ptr[9] << 16 | ptr[10] << 8 | ptr[11];
     char *desc = (char *)malloc((length)*sizeof(char));
@@ -31,22 +33,38 @@ void cleanCameraName(char *name) {
 
 void writeFile(char *fileName, char *buffer, int length) {
     FILE *fout = fopen(fileName, "wb");
+    if (fout == NULL) {
+      fprintf(stderr, "Cannot open file %s\n", fileName);
+      return;
+    }
     fwrite(buffer, length, 1,fout);
     fclose(fout);
 }
 
 void usage(char *name) {
-    printf("\nUsage: %s filename\n\n\
+    printf("\nUsage: %s filename [directoryname]\n\n\
 Extract ICC camera color profiles from Corel AfterShot Pro binary.\n\
 \n\
   filename: binary file of Corel AfterShot Pro\n\
+  directoryname: optional directoryname to save the files\n\
 \n", name);
 }
 
 int main(int argc, char **argv) {
-    if (argc != 2 ) {
+    if (argc != 2 && argc != 3) {
         usage(argv[0]);
         return 0;
+    }
+    char *dir;
+    if (argc == 3) {
+        dir = argv[2];
+        if (mkdir(dir, 0744)) {
+            fprintf(stderr, "Cannot create directory %s\n", dir);
+            exit(-1);
+        }
+    } else {
+        dir = (char *)malloc(sizeof(char));
+        dir[0] = '\0';
     }
     FILE *asp = fopen(argv[1], "rb");
     if (asp==NULL) {
@@ -81,8 +99,8 @@ int main(int argc, char **argv) {
                 }
                 ++searchpos2;
             }
-            char *fname = malloc(strlen(iccName)+5);
-            sprintf(fname, "%s.icc", iccName);
+            char *fname = malloc(strlen(dir)+1+strlen(iccName)+5);
+            sprintf(fname, "%s%s%s.icc", dir, strlen(dir) == 0 ? "": "/", iccName);
             printf("saving %s for camera %s\n", fname, cameraName);
             writeFile(fname, beginpos, (searchpos2-beginpos)+9);
             ++iccNum;
