@@ -34,8 +34,8 @@ void cleanCameraName(char *name) {
 void writeFile(char *fileName, char *buffer, int length) {
     FILE *fout = fopen(fileName, "wb");
     if (fout == NULL) {
-      fprintf(stderr, "Cannot open file %s\n", fileName);
-      return;
+        fprintf(stderr, "Cannot open file %s\n", fileName);
+        return;
     }
     fwrite(buffer, length, 1,fout);
     fclose(fout);
