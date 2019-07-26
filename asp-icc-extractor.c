@@ -60,6 +60,7 @@ int main(int argc, char **argv) {
     fread(buffer, length, 1, asp);
     char *searchpos = buffer;
     char *beginpos;
+    int iccNum = 0;
     while (searchpos < buffer+length) {
         if (strncmp(searchpos, "scnrRGB XYZ", 11)==0) {
             beginpos = searchpos-12;
@@ -81,11 +82,13 @@ int main(int argc, char **argv) {
             sprintf(fname, "%s.icc", iccName);
             printf("saving %s for camera %s\n", fname, cameraName);
             writeFile(fname, beginpos, (searchpos2-beginpos)+9);
+            ++iccNum;
         }
         ++searchpos;
     }
     if (asp!=NULL) {
         fclose (asp);
     }
+    printf("Extracted %d color profiles\n", iccNum);
     return 0;
 }
