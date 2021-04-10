@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/asalamon74/aspiccextractor.svg?branch=master)](https://travis-ci.org/asalamon74/aspiccextractor)
+[![Build Status](https://travis-ci.com/asalamon74/aspiccextractor.svg?branch=master)](https://travis-ci.com/asalamon74/aspiccextractor)
 [![CodeFactor](https://www.codefactor.io/repository/github/asalamon74/aspiccextractor/badge)](https://www.codefactor.io/repository/github/asalamon74/aspiccextractor)
 
 # ASPICCExtractor
